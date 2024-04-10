@@ -1,6 +1,6 @@
 Dans le projet ce qui marche :
 
-- Ajoute de power et de pv dans la classe
+- Ajoute de power et de pv dans la classe Userchampion
 - Créer un utilisateur avec l'attribution d'un champion
 - lancer le combat fonction mais ça renvoie null pour le gagant
 
