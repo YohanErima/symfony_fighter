@@ -43,7 +43,9 @@ class CombatController extends AbstractController
             ->findOneByUserId(["user" =>  $player2]);
 
         $winner = $this->Combat($champion1, $player1, $champion2, $player2);
-
+        if (!$winner) {
+            return new JsonResponse(["message" => "winner null"], 400);
+        }
         $fight = new Fight();
         $fight->setUser1($player1);
         $fight->setUser2($player2);
@@ -63,20 +65,20 @@ class CombatController extends AbstractController
         while ($champion1->getPv() != 0 && $champion2->getPv() != 0) {
             $first = mt_rand(0, 1);
             if ($first == 1) {
-                $this->Attaque($champion1, $champion2, new OutputInterface());
+                $this->Attaque($champion1, $champion2);
                 if ($champion2->getPv() == 0) {
                     return $user1;
                 }
-                $this->Attaque($champion2, $champion1, new OutputInterface());
+                $this->Attaque($champion2, $champion1);
                 if ($champion1->getPv() == 0) {
                     return $user2;
                 }
             } else {
-                $this->Attaque($champion2, $champion1, new OutputInterface());
+                $this->Attaque($champion2, $champion1);
                 if ($champion1->getPv() == 0) {
                     return $user2;
                 }
-                $this->Attaque($champion1, $champion2, new OutputInterface());
+                $this->Attaque($champion1, $champion2);
                 if ($champion2->getPv() == 0) {
                     return $user1;
                 }
@@ -84,16 +86,15 @@ class CombatController extends AbstractController
         }
     }
 
-    public function Attaque($champion1, $champion2, OutputInterface $output)
+    public function Attaque($champion1, $champion2)
     {
         $degats = mt_rand(0, $champion1->getPower());
         $pvRestant = $champion2->getPv() - $degats;
-        ('Bonjour');
-        $output->writeln('Champion : ' . $champion1->getName() . "attaque champion : " . $champion2->getName());
+        print('Champion : ' . $champion1->getName() . "attaque champion : " . $champion2->getName());
 
         if ($pvRestant < 0) {
             $champion2->setPv(0);
-            $output->writeln($degats . " point de dégats ont été infligés il reste " . $champion2->getPv() . " au Champion : " . $champion2->getName());
+            print($degats . " point de dégats ont été infligés il reste " . $champion2->getPv() . " au Champion : " . $champion2->getName());
         } else {
             $champion2->setPv($champion2->getPv() - $degats);
         }
